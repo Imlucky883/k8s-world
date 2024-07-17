@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+  namespace: host1_ns
+  annotations:
+    kubernetes.io/ingress.class: nginx
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-ingress-controller
+  namespace: ingress-controller-namespace
+spec:
+  selector:
+    matchLabels:
+      app: nginx-ingress
+  template:
+    metadata:
+      labels:
+        app: nginx-ingress
+    spec:
+      containers:
+      - name: nginx-ingress-controller
+        image: nginx/nginx-ingress:latest
+        args:
+        - /nginx-ingress-controller
+        - --ingress-class=nginx
+        - --watch-namespace=your-specific-namespace  # Specify the namespace to watch Other arguments and configurations for the NGINX Ingress Controller
